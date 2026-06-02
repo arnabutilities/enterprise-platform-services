@@ -16,6 +16,7 @@ The repository has moved beyond the original implementation-plan phase. The curr
 - observability package with auth metrics
 - runtime package with MFE boundary, retry, circuit breaker, and auth postMessage helpers
 - local Docker infra for Postgres and Redis
+- public-repo hygiene files (`LICENSE`, `CONTRIBUTING.md`, `.editorconfig`, Prettier config, hardened `.gitignore`)
 
 ## What Is Done
 
@@ -31,6 +32,8 @@ The repository has moved beyond the original implementation-plan phase. The curr
 | Security package    | Present and buildable                                     |
 | Runtime package     | Present and buildable                                     |
 | Local infra         | Postgres and Redis compose managed by `pnpm run infra:*`  |
+| Migration cleanup   | Old `src/pages` and `src/deleted-app` files removed       |
+| Public repo hygiene | License, contributing guide, formatting config present    |
 | Observability       | Auth metrics only                                         |
 
 ## Near-Term Priorities
@@ -45,17 +48,18 @@ pnpm --filter @enterprise-platform/contracts validate
 pnpm build
 pnpm test
 pnpm lint
+pnpm format:check
 ```
 
 Then split BFF integration tests and image builds into dedicated jobs as needed.
 
-### 2. Clean Up Migration Artifacts
+### 2. Keep Migration Artifacts Out
 
-The host shell still has some compatibility or leftover files from the old Next.js structure. Confirm usage, then remove dead files such as old `src/pages` and `src/deleted-app` paths when safe.
+The old Next.js `src/pages` and `src/deleted-app` leftovers have been removed from active apps. Keep future changes on the Vite path (`index.html`, `src/main.tsx`, `src/vite/App.tsx`, and app-level `vite.config.ts`) and avoid reintroducing Next.js/Webpack examples into active app code.
 
 ### 3. Align Docker Compose With Vite Ports
 
-The main local path is `pnpm dev`. Optional Docker stacks under `infra/docker/` start infra and the BFF (and optionally Redpanda). Frontend MFE containers are not defined in compose; run Vite dev servers on the host for ports `3002`, `5001`, `5002`, and `5003`.
+The main local path is `pnpm dev`. `pnpm run start:all` starts Postgres, Redis, and the BFF in Docker, then runs the frontend apps on the host. Optional Docker stacks under `infra/docker/` start infra and the BFF (and optionally Redpanda). Frontend MFE containers are not defined in compose; run Vite dev servers on the host for ports `3002`, `5001`, `5002`, and `5003`.
 
 ### 4. Harden Environment Configuration
 
@@ -90,7 +94,7 @@ The contracts package exists, but generated clients and CI enforcement are not a
 | ----- | ----------------------- | --------------------------------------------------------------------- |
 | 1     | CI baseline             | Pull requests run install, build, test, lint, contract validation     |
 | 2     | Local dev reliability   | `pnpm dev` and focused package dev commands documented and repeatable |
-| 3     | Migration cleanup       | stale Next.js artifacts removed or marked legacy                      |
+| 3     | Migration hygiene       | stale Next.js artifacts stay removed or clearly marked historical     |
 | 4     | Docker alignment        | compose files match Vite/BFF ports or are clearly scoped              |
 | 5     | Contract enforcement    | contracts validate in CI, docs match implemented endpoints            |
 | 6     | Observability expansion | production metrics/logging added only where needed                    |
@@ -105,6 +109,7 @@ pnpm run health
 pnpm build
 pnpm test
 pnpm lint
+pnpm format:check
 pnpm --filter @enterprise-platform/contracts validate
 ```
 

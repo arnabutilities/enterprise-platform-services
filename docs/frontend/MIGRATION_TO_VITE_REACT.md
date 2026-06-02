@@ -22,20 +22,21 @@ apps/
 |       |-- vite/App.tsx
 |       |-- components/
 |       |-- config/
-|       |-- federation/
-|       `-- pages/
+|       `-- federation/
 |-- analytics-mfe/
 |   |-- index.html
 |   |-- vite.config.ts
 |   `-- src/
 |       |-- main.tsx
-|       `-- vite/App.tsx
+|       |-- vite/App.tsx
+|       `-- components/
 |-- reports-mfe/
 |   |-- index.html
 |   |-- vite.config.ts
 |   `-- src/
 |       |-- main.tsx
-|       `-- vite/App.tsx
+|       |-- vite/App.tsx
+|       `-- components/
 `-- login-mfe/
     |-- index.html
     |-- vite.config.ts
@@ -45,7 +46,7 @@ apps/
         `-- components/
 ```
 
-Some old `src/pages` or `src/deleted-app` files still exist in the host shell as compatibility or leftover migration artifacts. The active browser entry is [apps/host-shell/src/main.tsx](../../apps/host-shell/src/main.tsx), which renders [apps/host-shell/src/vite/App.tsx](../../apps/host-shell/src/vite/App.tsx).
+Old `src/pages` and `src/deleted-app` migration leftovers have been removed from the active apps. The active host browser entry is [apps/host-shell/src/main.tsx](../../apps/host-shell/src/main.tsx), and remotes expose their federated entry from `src/vite/App.tsx`.
 
 ## Current Scripts
 
@@ -57,6 +58,7 @@ pnpm dev
 pnpm build
 pnpm test
 pnpm lint
+pnpm format:check
 ```
 
 Focused app commands:
@@ -102,15 +104,14 @@ VITE_BFF_URL=http://localhost:4000
 VITE_ALLOWED_MESSAGE_ORIGINS=http://localhost:5003
 ```
 
-The host has some `NEXT_PUBLIC_*` fallback reads in older compatibility code, but new frontend config should use `VITE_*`.
+The committed host `.env.example` contains only current Vite-facing variables. Do not add new `NEXT_PUBLIC_*` variables; those names belong to the retired Next.js stack.
 
 ## Migration Notes For Remaining Cleanup
 
 These are cleanup opportunities rather than setup steps:
 
 - Remove stale Next.js-oriented docs and examples when they are no longer useful.
-- Retire unused `src/deleted-app` and old `src/pages` files after confirming no imports depend on them.
-- Keep host routes in [apps/host-shell/src/vite/App.tsx](../../apps/host-shell/src/vite/App.tsx) aligned with the sidebar route map in [apps/host-shell/src/main.tsx](../../apps/host-shell/src/main.tsx).
+- Keep host routes in [apps/host-shell/src/vite/App.tsx](../../apps/host-shell/src/vite/App.tsx) aligned with the host shell navigation and MFE registry.
 - Keep Docker Compose port mappings aligned with Vite app ports.
 
 ## Verification

@@ -30,6 +30,12 @@ pnpm dev
 
 The root `dev` script starts Postgres and Redis through `infra/docker/docker-compose.yml`, runs the infra health check, then starts workspace `dev` tasks through Turbo.
 
+If you want the BFF to run in Docker while the frontend apps run as Vite dev servers, use:
+
+```bash
+pnpm run start:all
+```
+
 For focused MFE work, start only the pieces you need:
 
 ```bash
@@ -43,6 +49,13 @@ pnpm --filter bff dev
 ## Vite Federation Configuration
 
 The current apps use `@module-federation/vite` in each app-level `vite.config.ts`.
+
+Each remote has:
+
+- `index.html` for standalone Vite development
+- `src/main.tsx` as the standalone browser entry
+- `src/vite/App.tsx` as the federated module exposed to the host
+- `vite.config.ts` with the `@module-federation/vite` remote definition
 
 Analytics remote:
 
@@ -152,6 +165,8 @@ pnpm --filter analytics-mfe build
 pnpm --filter reports-mfe build
 pnpm --filter login-mfe build
 ```
+
+The Module Federation DTS plugin may print a non-fatal type-declaration generation warning during remote builds. Treat the build exit code and generated `dist/remoteEntry.js` as the source of truth until generated federation declarations are wired into CI.
 
 Then start the host and remotes and verify:
 

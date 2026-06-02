@@ -6,6 +6,8 @@
 **To**: Vite + React + Vite Federation (Complete)  
 **Created**: 2026-05-16
 
+> Current state: the active apps now use Vite entries (`index.html`, `src/main.tsx`, `src/vite/App.tsx`, and app-level `vite.config.ts`). Old `src/pages` and `src/deleted-app` migration leftovers have been removed from the active app source trees. Keep this document as historical cleanup context rather than a required setup checklist.
+
 ---
 
 ## Table of Contents

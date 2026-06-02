@@ -12,6 +12,7 @@ pnpm install --frozen-lockfile
 pnpm build
 pnpm test
 pnpm lint
+pnpm format:check
 pnpm --filter @enterprise-platform/contracts validate
 ```
 
@@ -21,19 +22,24 @@ The root scripts are defined in [package.json](../../package.json) and orchestra
 
 Root scripts:
 
-| Script               | Command                                         |
-| -------------------- | ----------------------------------------------- |
-| `dev`                | start infra, health check, then `turbo run dev` |
-| `build`              | `turbo run build`                               |
-| `lint`               | `turbo run lint`                                |
-| `test`               | `turbo run test`                                |
-| `infra:up`           | start Postgres and Redis through infra package  |
-| `infra:health`       | health-check Postgres and Redis                 |
-| `stack:up`           | start infra plus BFF dev container              |
-| `stack:down`         | stop infra plus BFF dev container               |
-| `stack:streaming:up` | start infra, BFF, and Redpanda                  |
-| `stack:prod:up`      | start infra plus production-style BFF           |
-| `dev:down`           | stop local infra                                |
+| Script                | Command                                          |
+| --------------------- | ------------------------------------------------ |
+| `dev`                 | start infra, health check, then `turbo run dev`  |
+| `build`               | `turbo run build`                                |
+| `lint`                | `turbo run lint`                                 |
+| `test`                | `turbo run test`                                 |
+| `format`              | format Markdown, TypeScript, JSON, CSS, YAML     |
+| `format:check`        | verify Prettier formatting without writing       |
+| `infra:up`            | start Postgres and Redis through infra package   |
+| `infra:health`        | health-check Postgres and Redis                  |
+| `stack:up`            | start infra plus BFF dev container               |
+| `stack:down`          | stop infra plus BFF dev container                |
+| `stack:streaming:up`  | start infra, BFF, and Redpanda                   |
+| `stack:prod:up`       | start infra plus production-style BFF            |
+| `start:all`           | start infra + BFF in Docker, then frontend apps  |
+| `start:all:streaming` | start infra + BFF + Redpanda, then frontend apps |
+| `start:all:down`      | stop the Docker stack used by `start:all`        |
+| `dev:down`            | stop local infra                                 |
 
 Useful package checks:
 
@@ -80,12 +86,14 @@ jobs:
       - run: pnpm build
       - run: pnpm test
       - run: pnpm lint
+      - run: pnpm format:check
 ```
 
 Notes:
 
 - Add `continue-on-error` only for known placeholder scripts if the team intentionally allows them.
 - The current repo has some packages where `lint` or `test` are placeholders.
+- Run `format:check` after `pnpm install` so style issues fail fast without rewriting files in CI.
 - If BFF integration tests require Redis/Postgres, add service containers or run tests with `SKIP_DATABASE=true` and `USE_MEMORY_CACHE=true` where appropriate.
 
 ## Recommended BFF Test Job
@@ -180,7 +188,8 @@ Do not add failing security gates until the team has triaged current dependency 
 ## Immediate Next Steps
 
 1. Add a minimal `ci.yml` with install, contracts validate, build, test, and lint.
-2. Split BFF integration tests into a separate job if service containers are required.
-3. Add image build workflows only after Dockerfiles are verified.
-4. Add deployment workflows only after the target registry and cluster conventions are known.
-5. Document any intentionally placeholder package scripts so CI behavior is predictable.
+2. Add `pnpm format:check` to CI so public contributors get consistent formatting feedback.
+3. Split BFF integration tests into a separate job if service containers are required.
+4. Add image build workflows only after Dockerfiles are verified.
+5. Add deployment workflows only after the target registry and cluster conventions are known.
+6. Document any intentionally placeholder package scripts so CI behavior is predictable.

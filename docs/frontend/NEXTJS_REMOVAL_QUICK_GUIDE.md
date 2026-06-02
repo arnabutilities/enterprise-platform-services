@@ -5,6 +5,8 @@
 **Duration**: 2-4 hours  
 **Risk Level**: Low (post-migration)
 
+> Current state: the active apps now use Vite entries (`index.html`, `src/main.tsx`, `src/vite/App.tsx`, and app-level `vite.config.ts`). Old `src/pages` and `src/deleted-app` migration leftovers have been removed from the active app source trees. Use this quick guide only as historical cleanup context.
+
 ---
 
 ## 📋 What This Guide Covers

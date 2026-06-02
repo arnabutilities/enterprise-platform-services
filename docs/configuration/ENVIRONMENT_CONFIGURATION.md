@@ -44,19 +44,11 @@ The login container reads:
 
 The host environment loader in [apps/host-shell/src/config/env.ts](../../apps/host-shell/src/config/env.ts) also supports:
 
-| Variable                               | Purpose                                   |
-| -------------------------------------- | ----------------------------------------- |
-| `NODE_ENV`                             | `development`, `staging`, or `production` |
-| `NEXT_PUBLIC_HOST_URL`                 | Compatibility host URL field              |
-| `NEXT_PUBLIC_API_BASE_URL`             | Compatibility API base URL                |
-| `NEXT_PUBLIC_API_URL`                  | Compatibility API URL                     |
-| `NEXT_PUBLIC_WS_URL`                   | Compatibility WebSocket URL               |
-| `NEXT_PUBLIC_DEBUG`                    | Compatibility debug flag                  |
-| `NEXT_PUBLIC_FEATURE_ANALYTICS_V2`     | Feature flag                              |
-| `NEXT_PUBLIC_FEATURE_REPORTS_ADVANCED` | Feature flag                              |
-| `NEXT_PUBLIC_FEATURE_EXPORT_PDF`       | Feature flag                              |
+| Variable   | Purpose                                   |
+| ---------- | ----------------------------------------- |
+| `NODE_ENV` | `development`, `staging`, or `production` |
 
-New frontend code should prefer `VITE_*`; existing `NEXT_PUBLIC_*` names are compatibility leftovers from the prior Next.js stack.
+Do not add new `NEXT_PUBLIC_*` variables. Those names belong to the retired Next.js stack and are intentionally absent from the committed host `.env.example`.
 
 ## BFF Variables
 
@@ -159,9 +151,12 @@ VITE_BFF_URL=http://localhost:4000
 VITE_ALLOWED_MESSAGE_ORIGINS=http://localhost:5003
 ```
 
+The committed template is [apps/host-shell/.env.example](../../apps/host-shell/.env.example). It is safe to commit because it contains only local placeholder values.
+
 ## Secrets Rules
 
 - Do not commit `.env`, `.env.local`, `.env.*.local`, private keys, or certificates.
+- Keep `.env.example` files free of real credentials and aligned with current `VITE_*` or BFF variables.
 - Keep production JWT and OAuth secrets in the deployment secret manager.
 - Use separate secrets for access and refresh tokens.
 - Keep local demo secrets obviously non-production.

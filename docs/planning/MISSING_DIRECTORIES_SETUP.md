@@ -4,6 +4,8 @@
 **Target**: Enterprise Platform Directory Structure  
 **Created**: 2026-05-16
 
+> Current state: the directories described in this guide (`contracts/`, `infra/`, `observability/`, `security/`, `tools/`, and `runtime/`) now exist in the repository. Keep this document as historical setup context, not as an active checklist for current development.
+
 ---
 
 ## Overview

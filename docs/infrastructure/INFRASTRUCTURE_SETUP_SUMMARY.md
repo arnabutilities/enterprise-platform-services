@@ -54,6 +54,9 @@ pnpm run stack:up
 pnpm run stack:down
 pnpm run stack:streaming:up
 pnpm run stack:streaming:down
+pnpm run start:all
+pnpm run start:all:streaming
+pnpm run start:all:down
 ```
 
 Aliases:
@@ -63,7 +66,7 @@ pnpm run health
 pnpm run dev:down
 ```
 
-The root `pnpm dev` command starts infra, checks health, then runs workspace dev tasks through Turbo.
+The root `pnpm dev` command starts infra, checks health, then runs workspace dev tasks through Turbo. The root `pnpm run start:all` command starts infra plus the BFF container, checks health, then runs the frontend app dev servers through Turbo.
 
 Compose file reference: [infra/docker/README.md](../../infra/docker/README.md).
 
@@ -127,12 +130,14 @@ pnpm --filter bff dev
 
 Additional compose overlays under [infra/docker/](../../infra/docker/) start the BFF and optional Redpanda on top of the base infra:
 
-| Command                       | Starts                            |
-| ----------------------------- | --------------------------------- |
-| `pnpm run stack:up`           | Postgres + Redis + BFF (dev)      |
-| `pnpm run stack:streaming:up` | Postgres + Redis + BFF + Redpanda |
+| Command                        | Starts                                              |
+| ------------------------------ | --------------------------------------------------- |
+| `pnpm run stack:up`            | Postgres + Redis + BFF (dev)                        |
+| `pnpm run stack:streaming:up`  | Postgres + Redis + BFF + Redpanda                   |
+| `pnpm run start:all`           | `stack:up` plus frontend Vite dev servers           |
+| `pnpm run start:all:streaming` | `stack:streaming:up` plus frontend Vite dev servers |
 
-Frontend MFE containers are not defined in compose. Use `pnpm dev` or individual `pnpm --filter <app> dev` commands for Vite dev servers on ports `3002`, `5001`, `5002`, and `5003`.
+Frontend MFE containers are not defined in compose. Use `pnpm dev`, `pnpm run start:all`, or individual `pnpm --filter <app> dev` commands for Vite dev servers on ports `3002`, `5001`, `5002`, and `5003`.
 
 ## Kubernetes, Helm, Terraform
 

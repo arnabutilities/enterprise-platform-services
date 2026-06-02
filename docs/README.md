@@ -12,12 +12,14 @@ The current platform is a pnpm workspace with:
 - a NestJS BFF on port `4000`
 - Docker-backed local Postgres and Redis infrastructure
 - shared workspace packages for contracts, UI, auth, pub/sub, security, runtime, and observability
+- public-repo hygiene files such as `LICENSE`, `CONTRIBUTING.md`, `.editorconfig`, and Prettier configuration
 
 ## Start Here
 
 | Need                                            | Document                                                                                     |
 | ----------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | Set up the repo locally                         | [onboarding/setup.md](onboarding/setup.md)                                                   |
+| Prepare for public review                       | [onboarding/PUBLIC_REVIEW_CHECKLIST.md](onboarding/PUBLIC_REVIEW_CHECKLIST.md)               |
 | Understand active Module Federation wiring      | [frontend/MODULE_FEDERATION_IMPLEMENTATION.md](frontend/MODULE_FEDERATION_IMPLEMENTATION.md) |
 | Understand the completed Vite migration         | [frontend/MIGRATION_TO_VITE_REACT.md](frontend/MIGRATION_TO_VITE_REACT.md)                   |
 | Work with the NestJS BFF                        | [backend/NESTJS_BFF_QUICK_REFERENCE.md](backend/NESTJS_BFF_QUICK_REFERENCE.md)               |
@@ -30,8 +32,9 @@ The current platform is a pnpm workspace with:
 These documents were reviewed against the current codebase and should be treated as the main references:
 
 - [onboarding/setup.md](onboarding/setup.md) - local prerequisites, install, dev commands, ports, and troubleshooting
+- [onboarding/PUBLIC_REVIEW_CHECKLIST.md](onboarding/PUBLIC_REVIEW_CHECKLIST.md) - pre-publish safety checks, generated-output rules, and reviewer notes
 - [frontend/MODULE_FEDERATION_IMPLEMENTATION.md](frontend/MODULE_FEDERATION_IMPLEMENTATION.md) - current Vite Module Federation setup, remotes, loader, and validation
-- [frontend/MIGRATION_TO_VITE_REACT.md](frontend/MIGRATION_TO_VITE_REACT.md) - current Vite state and remaining cleanup notes
+- [frontend/MIGRATION_TO_VITE_REACT.md](frontend/MIGRATION_TO_VITE_REACT.md) - current Vite state and completed migration cleanup notes
 - [backend/NESTJS_BFF_QUICK_REFERENCE.md](backend/NESTJS_BFF_QUICK_REFERENCE.md) - current REST auth, health, metrics, and BFF env reference
 - [backend/bff/QUICK_REFERENCE.md](backend/bff/QUICK_REFERENCE.md) - BFF commands, endpoints, and troubleshooting
 - [backend/bff/INTEGRATION_GUIDE.md](backend/bff/INTEGRATION_GUIDE.md) - frontend wiring, infra, and deployment checklist
@@ -97,9 +100,11 @@ Run from the repository root:
 ```bash
 pnpm install
 pnpm dev
+pnpm run start:all
 pnpm build
 pnpm test
 pnpm lint
+pnpm format:check
 ```
 
 Focused development:
@@ -108,12 +113,15 @@ Focused development:
 pnpm run infra:up
 pnpm run health
 pnpm run stack:up
+pnpm run stack:down
 pnpm --filter host-shell dev
 pnpm --filter analytics-mfe dev
 pnpm --filter reports-mfe dev
 pnpm --filter login-mfe dev
 pnpm --filter bff dev
 ```
+
+`pnpm dev` runs Postgres and Redis in Docker and starts workspace dev tasks through Turbo. `pnpm run start:all` runs Postgres, Redis, and the BFF in Docker, then starts the frontend apps through Turbo.
 
 ## Notes On Older Docs
 
@@ -125,6 +133,7 @@ In particular, older docs may mention:
 - GraphQL-first BFF examples
 - localhost port `3000` for the BFF
 - setup steps for directories that now exist
+- cleanup steps for old `src/pages` or `src/deleted-app` directories that have already been removed
 - future observability stacks that are not currently wired into `src`
 
 When in doubt, prefer the current-state guides listed above.

@@ -46,6 +46,14 @@ The root `dev` script does three things:
 2. Waits for infrastructure health with `pnpm run health`.
 3. Starts workspace `dev` tasks through Turbo.
 
+Use `start:all` when you want the BFF to run in Docker as well:
+
+```bash
+pnpm run start:all
+```
+
+`start:all` starts Postgres, Redis, and the BFF container through Docker Compose, waits for infra health, then starts the frontend apps through Turbo. This avoids running a second local BFF process on port `4000`.
+
 The infrastructure script uses `infra/docker/docker-compose.yml`, which starts:
 
 - Postgres on `localhost:5432`
@@ -74,6 +82,15 @@ pnpm install
 # Start infra and all dev-capable workspaces
 pnpm dev
 
+# Start infra + BFF in Docker, then frontend apps on the host
+pnpm run start:all
+
+# Start infra + BFF + Redpanda in Docker, then frontend apps on the host
+pnpm run start:all:streaming
+
+# Stop the Docker stack used by start:all/start:all:streaming
+pnpm run start:all:down
+
 # Start only Postgres and Redis
 pnpm run infra:up
 
@@ -95,6 +112,12 @@ pnpm test
 
 # Run all configured lint tasks
 pnpm lint
+
+# Check formatting without writing changes
+pnpm format:check
+
+# Format Markdown, TypeScript, JavaScript, JSON, CSS, and YAML
+pnpm format
 ```
 
 ## Running Individual Workspaces
@@ -127,7 +150,7 @@ pnpm --filter bff dev
 
 ## Docker Compose Options
 
-The main local development path is `pnpm dev`, which starts only the backing infra in Docker and runs apps on the host machine.
+The main local development path is `pnpm dev`, which starts only the backing infra in Docker and runs apps and services on the host machine. Use `pnpm run start:all` when you want the BFF containerized while keeping the Vite frontend dev servers on the host.
 
 Optional Docker stacks live under `infra/docker/`:
 
@@ -138,9 +161,14 @@ pnpm run stack:up
 # Infra + BFF + Redpanda
 pnpm run stack:streaming:up
 
+# One-command Docker stack + frontend app startup
+pnpm run start:all
+pnpm run start:all:streaming
+
 # Stop matching stacks
 pnpm run stack:down
 pnpm run stack:streaming:down
+pnpm run start:all:down
 ```
 
 See [infra/docker/README.md](../../infra/docker/README.md) for the compose file layout.
@@ -198,6 +226,8 @@ Common host-shell MFE URL overrides:
 | `VITE_ANALYTICS_URL` | `http://localhost:5001` |
 | `VITE_REPORTS_URL`   | `http://localhost:5002` |
 | `VITE_LOGIN_URL`     | `http://localhost:5003` |
+
+For the host shell, copy `apps/host-shell/.env.example` to `.env.local` only when you need overrides. Do not commit real `.env*` files.
 
 ## Troubleshooting
 
