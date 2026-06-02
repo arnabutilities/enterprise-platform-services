@@ -60,6 +60,7 @@ These documents were reviewed against the current codebase and should be treated
 - [backend/bff/INTEGRATION_GUIDE.md](backend/bff/INTEGRATION_GUIDE.md)
 - [backend/bff/IMPLEMENTATION_SUMMARY.md](backend/bff/IMPLEMENTATION_SUMMARY.md)
 - [backend/bff/EXECUTIVE_SUMMARY.md](backend/bff/EXECUTIVE_SUMMARY.md)
+- [backend/svc-mash/design-documentation.md](backend/svc-mash/design-documentation.md)
 - [backend/NESTJS_BFF_PKCE_GRAPHQL.md](backend/NESTJS_BFF_PKCE_GRAPHQL.md)
 - [backend/BFF_POSTGRESQL_REDIS_QUICK_SETUP.md](backend/BFF_POSTGRESQL_REDIS_QUICK_SETUP.md)
 - [backend/BFF_POSTGRESQL_REDIS_INFRASTRUCTURE.md](backend/BFF_POSTGRESQL_REDIS_INFRASTRUCTURE.md)

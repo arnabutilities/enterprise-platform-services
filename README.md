@@ -162,6 +162,7 @@ For a lightweight demo without Postgres or Redis, set `SKIP_DATABASE=true` and
 | State management            | [docs/frontend/STATE_MANAGEMENT.md](docs/frontend/STATE_MANAGEMENT.md)                                     |
 | BFF reference               | [docs/backend/NESTJS_BFF_QUICK_REFERENCE.md](docs/backend/NESTJS_BFF_QUICK_REFERENCE.md)                   |
 | BFF infra (Postgres/Redis)  | [docs/backend/BFF_POSTGRESQL_REDIS_INFRASTRUCTURE.md](docs/backend/BFF_POSTGRESQL_REDIS_INFRASTRUCTURE.md) |
+| Service mesh strategy       | [docs/backend/svc-mash/design-documentation.md](docs/backend/svc-mash/design-documentation.md)             |
 | Auth & authorization design | [docs/auth/](docs/auth/)                                                                                   |
 | API contracts               | [docs/contracts/API_CONTRACTS_LAYER.md](docs/contracts/API_CONTRACTS_LAYER.md)                             |
 | Security                    | [docs/security/SECURITY_SETUP.md](docs/security/SECURITY_SETUP.md)                                         |
