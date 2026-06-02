@@ -1,0 +1,30 @@
+version: '3.9'
+
+# Overlay for local BFF development. Run with base infra:
+#   docker compose -f infra/docker/docker-compose.yml -f infra/docker/docker-compose.bff.yml up --build
+
+services:
+  bff:
+    build:
+      context: ../..
+      dockerfile: services/bff/Dockerfile.dev
+    ports:
+      - '4000:4000'
+    working_dir: /app/services/bff
+    volumes:
+      - ../..:/app
+      - /app/node_modules
+      - /app/services/bff/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - USE_MEMORY_CACHE=true
+      - SKIP_DATABASE=true
+      - DEMO_ALLOWED_EMAILS=test@example.com,admin@example.com
+      - CORS_ORIGIN=http://localhost:3002,http://localhost:5003
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped

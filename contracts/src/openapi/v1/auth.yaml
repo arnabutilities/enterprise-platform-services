@@ -1,0 +1,197 @@
+paths:
+  /api/auth/initiate:
+    post:
+      summary: Start PKCE authentication flow
+      tags: [Auth]
+      operationId: initiatePkceFlow
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PkceInitiateRequest'
+      responses:
+        '200':
+          description: PKCE session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PkceInitiateResponse'
+        '400':
+          $ref: '../schemas/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../schemas/errors.yaml#/components/responses/Unauthorized'
+        '429':
+          description: Too many requests
+
+  /api/auth/exchange:
+    post:
+      summary: Exchange PKCE verifier for tokens
+      tags: [Auth]
+      operationId: exchangePkceCode
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PkceExchangeRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '../schemas/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../schemas/errors.yaml#/components/responses/Unauthorized'
+
+  /api/auth/refresh:
+    post:
+      summary: Refresh access token
+      tags: [Auth]
+      operationId: refreshAccessToken
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Tokens refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '../schemas/errors.yaml#/components/responses/Unauthorized'
+
+  /api/auth/logout:
+    post:
+      summary: Revoke refresh token and end session
+      tags: [Auth]
+      operationId: logout
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+      responses:
+        '200':
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          $ref: '../schemas/errors.yaml#/components/responses/BadRequest'
+
+  /api/auth/me:
+    get:
+      summary: Get current authenticated user
+      tags: [Auth]
+      operationId: getCurrentUser
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: '../schemas/common.yaml#/components/schemas/User'
+        '401':
+          $ref: '../schemas/errors.yaml#/components/responses/Unauthorized'
+
+components:
+  schemas:
+    PkceInitiateRequest:
+      type: object
+      required: [email, provider]
+      properties:
+        email:
+          type: string
+          format: email
+        provider:
+          type: string
+          enum: [local, keycloak]
+        codeVerifier:
+          type: string
+
+    PkceInitiateResponse:
+      type: object
+      required: [sessionId, provider, state, codeChallenge, codeVerifier]
+      properties:
+        sessionId:
+          type: string
+        provider:
+          type: string
+        state:
+          type: string
+        codeChallenge:
+          type: string
+        codeVerifier:
+          type: string
+
+    PkceExchangeRequest:
+      type: object
+      required: [sessionId, state, codeVerifier]
+      properties:
+        sessionId:
+          type: string
+        state:
+          type: string
+        codeVerifier:
+          type: string
+        code:
+          type: string
+
+    RefreshTokenRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
+
+    LogoutRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken:
+          type: string
+
+    AuthResponse:
+      type: object
+      required: [accessToken, refreshToken, user]
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          type: object
+          required: [id, email, name, roles]
+          properties:
+            id:
+              type: string
+            email:
+              type: string
+            name:
+              type: string
+            picture:
+              type: string
+              nullable: true
+            roles:
+              type: array
+              items:
+                type: string

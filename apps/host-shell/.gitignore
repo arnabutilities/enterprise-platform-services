@@ -1,0 +1,34 @@
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Output
+/dist/
+/.next/
+/out/
+/coverage/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing
+.nyc_output/
+htmlcov/
+
+# Temporary
+*.tmp
+*.temp

@@ -1,0 +1,35 @@
+version: '3.9'
+
+# Production-style BFF overlay. Run with base infra:
+#   docker compose -f infra/docker/docker-compose.yml -f infra/docker/docker-compose.bff.prod.yml up --build -d
+
+services:
+  bff:
+    build:
+      context: ../..
+      dockerfile: services/bff/Dockerfile
+    ports:
+      - '4000:4000'
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - JWT_SECRET=${JWT_SECRET:-development-secret-change-me}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-development-refresh-secret-change-me}
+      - JWT_EXPIRY=1h
+      - JWT_REFRESH_EXPIRY=7d
+      - CORS_ORIGIN=http://localhost:3002,http://localhost:5003
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=bff_user
+      - DB_PASSWORD=bff_secure_password_change_me
+      - DB_NAME=bff_db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SKIP_DATABASE=false
+      - USE_MEMORY_CACHE=false
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped

@@ -1,0 +1,47 @@
+{
+  "name": "enterprise-platform",
+  "private": true,
+  "version": "0.1.0",
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "turbo": "^1.13.4"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*",
+    "contracts",
+    "tools/*",
+    "infra/*",
+    "observability/*",
+    "security/*",
+    "runtime/*"
+  ],
+  "scripts": {
+    "dev": "pnpm run infra:up && pnpm run health && pnpm exec turbo run dev",
+    "start:all": "pnpm run stack:up && pnpm run health && pnpm exec turbo run dev --filter=./apps/*",
+    "start:all:streaming": "pnpm run stack:streaming:up && pnpm run health && pnpm exec turbo run dev --filter=./apps/*",
+    "start:all:down": "pnpm run stack:streaming:down",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css,yml,yaml}\"",
+    "dev:down": "pnpm run infra:down",
+    "infra:up": "pnpm --filter @enterprise-platform/infra run start:if-needed",
+    "infra:down": "pnpm --filter @enterprise-platform/infra run down",
+    "infra:health": "pnpm --filter @enterprise-platform/infra run health",
+    "health": "pnpm run infra:health",
+    "stack:up": "pnpm --filter @enterprise-platform/infra run stack:up",
+    "stack:down": "pnpm --filter @enterprise-platform/infra run stack:down",
+    "stack:streaming:up": "pnpm --filter @enterprise-platform/infra run stack:streaming:up",
+    "stack:streaming:down": "pnpm --filter @enterprise-platform/infra run stack:streaming:down",
+    "stack:prod:up": "pnpm --filter @enterprise-platform/infra run stack:prod:up",
+    "stack:prod:down": "pnpm --filter @enterprise-platform/infra run stack:prod:down"
+  },
+  "pnpm": {
+    "overrides": {
+      "watchpack": "2.4.1"
+    }
+  }
+}

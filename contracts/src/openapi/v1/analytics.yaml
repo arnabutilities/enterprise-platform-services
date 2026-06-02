@@ -1,0 +1,270 @@
+openapi: 3.0.0
+info:
+  title: Analytics API
+  version: 1.0.0
+  description: Analytics dashboard and metrics API
+
+paths:
+  /api/v1/analytics/dashboards:
+    get:
+      summary: List analytics dashboards
+      tags: [Dashboards]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: List of dashboards
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AnalyticsDashboard'
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                      pageSize:
+                        type: integer
+                      total:
+                        type: integer
+                      totalPages:
+                        type: integer
+                    required: [page, pageSize, total, totalPages]
+                required: [data, pagination]
+        '401':
+          $ref: '../schemas/errors.yaml#/components/responses/Unauthorized'
+      security:
+        - BearerAuth: []
+
+    post:
+      summary: Create new dashboard
+      tags: [Dashboards]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DashboardItem'
+              required: [name, items]
+      responses:
+        '201':
+          description: Dashboard created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsDashboard'
+        '400':
+          $ref: '../schemas/errors.yaml#/components/responses/BadRequest'
+        '401':
+          $ref: '../schemas/errors.yaml#/components/responses/Unauthorized'
+      security:
+        - BearerAuth: []
+
+  /api/v1/analytics/dashboards/{dashboardId}:
+    get:
+      summary: Get dashboard by ID
+      tags: [Dashboards]
+      parameters:
+        - name: dashboardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dashboard details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsDashboard'
+        '404':
+          $ref: '../schemas/errors.yaml#/components/responses/NotFound'
+      security:
+        - BearerAuth: []
+
+    put:
+      summary: Update dashboard
+      tags: [Dashboards]
+      parameters:
+        - name: dashboardId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsDashboard'
+      responses:
+        '200':
+          description: Dashboard updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsDashboard'
+        '404':
+          $ref: '../schemas/errors.yaml#/components/responses/NotFound'
+      security:
+        - BearerAuth: []
+
+    delete:
+      summary: Delete dashboard
+      tags: [Dashboards]
+      parameters:
+        - name: dashboardId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Dashboard deleted
+        '404':
+          $ref: '../schemas/errors.yaml#/components/responses/NotFound'
+      security:
+        - BearerAuth: []
+
+  /api/v1/analytics/query:
+    post:
+      summary: Execute analytics query
+      tags: [Metrics]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsQuery'
+      responses:
+        '200':
+          description: Query results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsResponse'
+        '400':
+          $ref: '../schemas/errors.yaml#/components/responses/BadRequest'
+      security:
+        - BearerAuth: []
+
+components:
+  schemas:
+    AnalyticsDashboard:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardItem'
+        owner:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, name, items, owner, createdAt, updatedAt]
+
+    DashboardItem:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+          enum: [metric, chart, table]
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsMetric'
+        dateRange:
+          $ref: '../schemas/common.yaml#/components/schemas/DateRange'
+      required: [id, title, type, metrics, dateRange]
+
+    AnalyticsMetric:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        value:
+          type: number
+        unit:
+          type: string
+        trend:
+          type: number
+        timestamp:
+          type: string
+          format: date-time
+      required: [id, name, value, timestamp]
+
+    AnalyticsQuery:
+      type: object
+      properties:
+        dateRange:
+          $ref: '../schemas/common.yaml#/components/schemas/DateRange'
+        metrics:
+          type: array
+          items:
+            type: string
+        dimensions:
+          type: array
+          items:
+            type: string
+        filters:
+          type: object
+      required: [dateRange, metrics]
+
+    AnalyticsResponse:
+      type: object
+      properties:
+        query:
+          $ref: '#/components/schemas/AnalyticsQuery'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsMetric'
+        generatedAt:
+          type: string
+          format: date-time
+        cacheHit:
+          type: boolean
+      required: [query, data, generatedAt, cacheHit]
+
+  securitySchemes:
+    BearerAuth:
+      $ref: '../schemas/errors.yaml#/components/securitySchemes/BearerAuth'

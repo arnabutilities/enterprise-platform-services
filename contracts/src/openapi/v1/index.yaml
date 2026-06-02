@@ -1,0 +1,69 @@
+openapi: 3.0.0
+info:
+  title: Enterprise Platform API
+  version: 1.0.0
+  description: Unified API specification for the enterprise platform
+  contact:
+    name: Platform Team
+    url: https://platform.example.com
+  license:
+    name: Proprietary
+servers:
+  - url: http://localhost:4000
+    description: BFF local development
+  - url: http://localhost:3000
+    description: Legacy local development
+  - url: https://api.example.com
+    description: Production
+paths:
+  /health:
+    get:
+      summary: Health check
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [ok, degraded]
+                  timestamp:
+                    type: string
+                    format: date-time
+      security: []
+
+  /api/v1/analytics/dashboards:
+    $ref: './analytics.yaml#/paths/~1api~1v1~1analytics~1dashboards'
+
+  /api/v1/analytics/dashboards/{dashboardId}:
+    $ref: './analytics.yaml#/paths/~1api~1v1~1analytics~1dashboards~1{dashboardId}'
+
+  /api/v1/analytics/query:
+    $ref: './analytics.yaml#/paths/~1api~1v1~1analytics~1query'
+
+  /api/auth/initiate:
+    $ref: './auth.yaml#/paths/~1api~1auth~1initiate'
+
+  /api/auth/exchange:
+    $ref: './auth.yaml#/paths/~1api~1auth~1exchange'
+
+  /api/auth/refresh:
+    $ref: './auth.yaml#/paths/~1api~1auth~1refresh'
+
+  /api/auth/logout:
+    $ref: './auth.yaml#/paths/~1api~1auth~1logout'
+
+  /api/auth/me:
+    $ref: './auth.yaml#/paths/~1api~1auth~1me'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token in Authorization header

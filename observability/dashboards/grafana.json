@@ -1,0 +1,31 @@
+{
+  "dashboard": {
+    "title": "Enterprise Platform",
+    "panels": [
+      {
+        "title": "HTTP Requests",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])"
+          }
+        ]
+      },
+      {
+        "title": "MFE Load Times",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, mfe_load_time_seconds)"
+          }
+        ]
+      },
+      {
+        "title": "MFE Error Rate",
+        "targets": [
+          {
+            "expr": "rate(mfe_errors_total[5m])"
+          }
+        ]
+      }
+    ]
+  }
+}

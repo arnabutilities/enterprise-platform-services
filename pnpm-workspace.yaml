@@ -1,0 +1,10 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'services/*'
+  - 'contracts'
+  - 'tools/*'
+  - 'infra/*'
+  - 'observability'
+  - 'security'
+  - 'runtime'

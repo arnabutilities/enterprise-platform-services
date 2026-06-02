@@ -1,0 +1,23 @@
+extends:
+  - spectral:oas
+
+rules:
+  contact-properties:
+    description: OpenAPI contact properties must be present
+    severity: warn
+
+  operation-operationId-required:
+    description: Operation should have an operationId
+    severity: warn
+
+  info-contact:
+    description: API contact information should be present
+    severity: warn
+
+  operation-description:
+    description: Operation description is required
+    severity: error
+
+  path-params-defined:
+    description: Path parameters must be defined
+    severity: error

@@ -1,0 +1,18 @@
+{
+  "name": "@enterprise-platform/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "validate": "spectral lint src/openapi/v1/index.yaml",
+    "generate:types": "echo 'Generate contract types here'"
+  },
+  "devDependencies": {
+    "@stoplight/spectral-cli": "^6.11.0",
+    "swagger-ui-express": "^4.6.0",
+    "typescript": "^5.5.0",
+    "zod": "^3.22.0"
+  }
+}

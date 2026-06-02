@@ -1,0 +1,19 @@
+{
+  "name": "@enterprise-platform/infra",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "validate": "echo 'No infra validation configured yet'",
+    "up": "node ./scripts/start-infra.js",
+    "down": "docker compose -f docker/docker-compose.yml down",
+    "start": "pnpm run up",
+    "start:if-needed": "node ./scripts/start-infra.js",
+    "health": "node ./scripts/check-infra-health.js",
+    "stack:up": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.bff.yml up --build -d",
+    "stack:down": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.bff.yml down",
+    "stack:streaming:up": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.bff.yml -f docker/docker-compose.streaming.yml up --build -d",
+    "stack:streaming:down": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.bff.yml -f docker/docker-compose.streaming.yml down",
+    "stack:prod:up": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.bff.prod.yml up --build -d",
+    "stack:prod:down": "docker compose -f docker/docker-compose.yml -f docker/docker-compose.bff.prod.yml down"
+  }
+}
