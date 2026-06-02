@@ -9,6 +9,10 @@ This README summarizes the documentation in [`docs/`](docs/). For the
 authoritative, continuously reviewed guides, start with
 [`docs/README.md`](docs/README.md).
 
+## Architecture Diagram
+
+![Enterprise Platform Architecture](docs/assets/enterprise-platform-architecture.png)
+
 ## Overview
 
 The platform is composed of:
